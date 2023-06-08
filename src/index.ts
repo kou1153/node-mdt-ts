@@ -1,8 +1,9 @@
+import * as dotenv from "dotenv";
 import "reflect-metadata";
+import path from "path";
 import express, { Express, Request, Response } from "express";
 
 import morgan from "morgan";
-import * as dotenv from "dotenv";
 
 import { ConnectDB } from "./db-connection";
 import { ErrorHandler } from "./utils/error-handler";
@@ -14,8 +15,11 @@ import {
   RandomMDT,
   UpdateMDT,
 } from "./mdt-handler";
+import { SentEmail } from "./email-handler";
 
-dotenv.config({ path: ".env" });
+dotenv.config({ path: path.join(__dirname, "./.env") });
+
+ConnectDB();
 
 let app: Express = express();
 
@@ -33,7 +37,7 @@ app.delete("/api/v1/mdt/delete/:id", DeleteMDT);
 
 app.get("/api/v1/mdt/random", RandomMDT);
 
-app.post("/api/v1/email");
+app.post("/api/v1/email", SentEmail);
 
 app.use(ErrorHandler);
 
@@ -42,6 +46,5 @@ app.use("*", (req: Request, res: Response) => {
 });
 
 app.listen(process.env.port, async () => {
-  await ConnectDB();
   console.log("Server is running on: ", process.env.port);
 });

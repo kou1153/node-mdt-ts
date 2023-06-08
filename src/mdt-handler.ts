@@ -1,10 +1,9 @@
 import { Request, Response } from "express";
 import { AsyncHandler } from "./utils/async-handler";
 import { MDT } from "./entity/MDT";
-import { DbInstance } from "./db-connection";
+import { AppDataSource } from "./data-source";
 
-const mdtRepository = DbInstance.getRepository(MDT);
-console.log("🚀 ~ file: mdt-handler.ts:7 ~ mdtRepository:", mdtRepository)
+const mdtRepository = AppDataSource.getRepository(MDT);
 
 const CreateMDT = AsyncHandler(
   async (
