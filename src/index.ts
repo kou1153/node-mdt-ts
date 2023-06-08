@@ -1,7 +1,7 @@
 import * as dotenv from "dotenv";
 import "reflect-metadata";
 import path from "path";
-import express, { Express, Request, Response } from "express";
+import express, { Express } from "express";
 
 import morgan from "morgan";
 
@@ -16,6 +16,7 @@ import {
   UpdateMDT,
 } from "./mdt-handler";
 import { SentEmail } from "./email-handler";
+import { AsyncHandler } from "./utils/async-handler";
 
 dotenv.config({ path: path.join(__dirname, "./.env") });
 
@@ -27,23 +28,23 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.post("/api/v1/mdt/create", CreateMDT);
+app.post("/api/v1/mdt/create", AsyncHandler(CreateMDT));
 
-app.get("/api/v1/mdt/read", GetAllMDT);
+app.get("/api/v1/mdt/read", AsyncHandler(GetAllMDT));
 
-app.put("/api/v1/mdt/update/:id", UpdateMDT);
+app.put("/api/v1/mdt/update/:id", AsyncHandler(UpdateMDT));
 
-app.delete("/api/v1/mdt/delete/:id", DeleteMDT);
+app.delete("/api/v1/mdt/delete/:id", AsyncHandler(DeleteMDT));
 
-app.get("/api/v1/mdt/random", RandomMDT);
+app.get("/api/v1/mdt/random", AsyncHandler(RandomMDT));
 
-app.post("/api/v1/email", SentEmail);
+app.post("/api/v1/email", AsyncHandler(SentEmail));
+
+app.use("*", () => {
+  throw new Error("Invalid Routes");
+});
 
 app.use(ErrorHandler);
-
-app.use("*", (req: Request, res: Response) => {
-  res.status(404).json({ message: "Invalid Route(s)" });
-});
 
 app.listen(process.env.port, async () => {
   console.log("Server is running on: ", process.env.port);
