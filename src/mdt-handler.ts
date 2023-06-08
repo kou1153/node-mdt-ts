@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { MDT } from "./entity/MDT";
 import { AppDataSource } from "./data-source";
+import { validateMDT } from "./utils/joi-validate";
 
 const mdtRepository = AppDataSource.getRepository(MDT);
 
@@ -14,6 +15,9 @@ const CreateMDT = async (
   }>,
   res: Response
 ) => {
+  const { error } = validateMDT(req.body);
+  if (error) throw new Error(`${error.details[0].message}`);
+
   const newMDT: MDT = new MDT();
 
   newMDT.HoVaTen = req.body.hovaten;
@@ -51,6 +55,9 @@ const UpdateMDT = async (
   }>,
   res: Response
 ) => {
+  const { error } = validateMDT(req.body);
+  if (error) throw new Error(`${error.details[0].message}`);
+
   const updateMDT: MDT = await mdtRepository.findOneByOrFail({
     id: req.params.id,
   });

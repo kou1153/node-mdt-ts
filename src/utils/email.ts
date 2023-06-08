@@ -12,13 +12,14 @@ const SentMail = async (receiver: string, subject: string, body: string) => {
     },
   });
 
-  let { error, info }: SentMessageInfo = await transporter.sendMail({
+  let info: SentMessageInfo = await transporter.sendMail({
     from: "1959018@itec.hcmus.edu.vn",
     to: receiver,
     subject: subject,
     text: body,
   });
-  return { error, info };
+
+  return info;
 };
 
 export { SentMail };
