@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { SentMail } from "./utils/email";
+import { SentMail } from "../utils/email";
 import { SentMessageInfo } from "nodemailer";
-import { validateEmail } from "./utils/joi-validate";
+import { validateEmail } from "../utils/joi-validate";
 
 const SentEmail = async (
   req: Request<{ email: string; mdt: string }>,

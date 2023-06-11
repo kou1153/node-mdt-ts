@@ -8,7 +8,7 @@ const SentMail = async (receiver: string, subject: string, body: string) => {
     secure: true,
     auth: {
       user: "1959018@itec.hcmus.edu.vn",
-      pass: process.env.emailKey,
+      pass: process.env.EMAIL_KEY,
     },
   });
 

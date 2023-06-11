@@ -1,51 +1,27 @@
-import * as dotenv from "dotenv";
 import "reflect-metadata";
+import * as dotenv from "dotenv";
 import path from "path";
-import express, { Express } from "express";
+import {CreateExpress} from "./app";
+import {ConnectDB, CreateDataSource} from "./database/connection";
+import {MDT} from "./database/model/MDT";
 
-import morgan from "morgan";
+async function main() {
+    dotenv.config({path: path.join(__dirname, "./.env")});
 
-import { ConnectDB } from "./db-connection";
-import { ErrorHandler } from "./utils/error-handler";
+    const host = process.env.DB_HOST || "localhost";
+    const port = process.env.DB_PORT || 5433;
+    const uname = process.env.DB_UNAME || "postgres";
+    const pass = process.env.DB_PASS || "postgres";
+    const dbName = process.env.DB_NAME || "postgres";
 
-import {
-  CreateMDT,
-  DeleteMDT,
-  GetAllMDT,
-  RandomMDT,
-  UpdateMDT,
-} from "./mdt-handler";
-import { SentEmail } from "./email-handler";
-import { AsyncHandler } from "./utils/async-handler";
+    let _db = CreateDataSource(host, Number(port), uname, pass, dbName, [MDT])
 
-dotenv.config({ path: path.join(__dirname, "./.env") });
+    await ConnectDB(_db);
 
-ConnectDB();
+    let app = await CreateExpress();
+    app.listen(process.env.PORT, () => console.log(`Server started`));
+}
 
-let app: Express = express();
-
-app.use(morgan("dev"));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-app.post("/api/v1/mdt/create", AsyncHandler(CreateMDT));
-
-app.get("/api/v1/mdt/read", AsyncHandler(GetAllMDT));
-
-app.put("/api/v1/mdt/update/:id", AsyncHandler(UpdateMDT));
-
-app.delete("/api/v1/mdt/delete/:id", AsyncHandler(DeleteMDT));
-
-app.get("/api/v1/mdt/random", AsyncHandler(RandomMDT));
-
-app.post("/api/v1/email", AsyncHandler(SentEmail));
-
-app.use("*", () => {
-  throw new Error("Invalid Routes");
-});
-
-app.use(ErrorHandler);
-
-app.listen(process.env.port, async () => {
-  console.log("Server is running on: ", process.env.port);
+main().catch((e) => {
+    console.log(e)
 });
