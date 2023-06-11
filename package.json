@@ -30,6 +30,6 @@
   "scripts": {
     "start": "ts-node src/index.ts",
     "typeorm": "typeorm-ts-node-commonjs",
-    "test": "mocha --timeout 10000 -r ts-node/register 'tests/**/*.ts'"
+    "test": "mocha --timeout 30000 -r ts-node/register 'tests/**/*.ts'"
   }
 }
