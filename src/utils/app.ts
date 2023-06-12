@@ -17,7 +17,7 @@ const CreateExpress = async (): Promise<express.Express> => {
     app.use("/api/v1/email", EmailRouter);
 
     app.use("*", () =>
-        errorThrower(new Error("CreateExpress() error"), "Invalid Route")
+        errorThrower(Error("CreateExpress() invalid route"), "Invalid Route")
     );
 
     app.use(ErrorHandler);

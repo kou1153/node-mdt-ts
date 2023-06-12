@@ -6,6 +6,7 @@ const SentMail = async (opts): Promise<any> => {
         port: 465,
         secure: true,
         auth: {
+            type: "login",
             user: "1959018@itec.hcmus.edu.vn",
             pass: process.env.EMAIL_KEY,
         },

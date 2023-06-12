@@ -9,7 +9,7 @@ import {DataSource} from "typeorm";
 import {errorThrower} from "./utils/error-thrower";
 
 const main = async (): Promise<void> => {
-    dotenv.config({path: path.join(__dirname, "./.env")});
+    dotenv.config({path: path.resolve(__dirname, '../.env')});
 
     const host = process.env.DB_HOST || "localhost";
     const port = process.env.DB_PORT || 5432;

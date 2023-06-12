@@ -26,7 +26,6 @@ const CreateDataSource = (
 
 const ConnectDB = async (source: DataSource): Promise<void> => {
     DB = await source.initialize()
-    console.log("DB Connected")
 };
 
 const GetConnection = (): DataSource => DB;

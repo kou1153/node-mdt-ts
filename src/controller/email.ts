@@ -21,7 +21,7 @@ const SentEmail = async (
         errorThrower(e, "Failed to sent email")
     );
 
-    res.json({success: true, message: info});
+    res.json({success: true, message: info.envelope});
 };
 
 export {SentEmail};

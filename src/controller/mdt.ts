@@ -44,7 +44,7 @@ const GetAllMDT = async (req: Request, res: Response): Promise<void> => {
     );
 
     if (allMDTsCount === 0) {
-        errorThrower(new Error("GetAllMDT() error"), "Mdts is empty")
+        errorThrower(Error("GetAllMDT() empty mdt"), "Mdts is empty")
     }
 
     res.json({success: true, message: allMDTs});
@@ -110,21 +110,15 @@ const RandomMDT = async (req: Request, res: Response): Promise<void> => {
     );
 
     if (allMDTsCount === 0) {
-        errorThrower(new Error("allMDTsCount() error"), "mdts is empty")
+        errorThrower(Error("RandomMDT() empty mdt"), "Mdts is empty")
     }
 
     const randIndex: number = Math.floor(Math.random() * allMDTs.length);
     const chosenMDT: MDT = allMDTs[randIndex];
 
-    const deleteMDT: MDT = await mdtRepository.findOneByOrFail({
-        id: chosenMDT.id,
-    }).catch(e =>
-        errorThrower(e, "Failed to find mdt to delete in random mdt with id", chosenMDT.id)
-    );
+    chosenMDT.DeletedAt = true
 
-    deleteMDT.DeletedAt = true;
-
-    await mdtRepository.save(deleteMDT).catch(e =>
+    await mdtRepository.save(chosenMDT).catch(e =>
         errorThrower(e, "Failed to query save delete chosen mdt")
     );
 
