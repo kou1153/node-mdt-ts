@@ -3,39 +3,32 @@ import {DataSource, EntitySchema, MixedList} from "typeorm";
 
 let DB: DataSource;
 
-function CreateDataSource(
+const CreateDataSource = (
     host: string,
     port: number,
     username: string,
     password: string,
     database: string,
-    entities: MixedList<string | Function | EntitySchema<any>>
-): DataSource {
-    return new DataSource({
-        type: "postgres",
-        host: host,
-        port: port,
-        username: username,
-        password: password,
-        database: database,
-        synchronize: true,
-        logging: false,
-        entities: entities,
-        migrations: [],
-        subscribers: [],
-    });
-}
+    entities: MixedList<string | Function | EntitySchema>
+): DataSource => new DataSource({
+    type: "postgres",
+    host: host,
+    port: port,
+    username: username,
+    password: password,
+    database: database,
+    synchronize: true,
+    logging: false,
+    entities: entities,
+    migrations: [],
+    subscribers: [],
+});
 
-async function ConnectDB(source: DataSource) {
-    try {
-        DB = await source.initialize()
-    } catch (err) {
-        console.error("Error during Data Source initialization", err);
-    }
-}
+const ConnectDB = async (source: DataSource): Promise<void> => {
+    DB = await source.initialize()
+    console.log("DB Connected")
+};
 
-function GetConnection() {
-    return DB;
-}
+const GetConnection = (): DataSource => DB;
 
 export {CreateDataSource, ConnectDB, GetConnection};

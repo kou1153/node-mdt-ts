@@ -1,25 +1,22 @@
 import nodemailer from "nodemailer";
-import { SentMessageInfo } from "nodemailer";
 
-const SentMail = async (receiver: string, subject: string, body: string) => {
-  let transporter: nodemailer.Transporter = nodemailer.createTransport({
-    service: "gmail",
-    port: 465,
-    secure: true,
-    auth: {
-      user: "1959018@itec.hcmus.edu.vn",
-      pass: process.env.EMAIL_KEY,
-    },
-  });
+const SentMail = async (opts): Promise<any> => {
+    const transporter: nodemailer.Transporter = nodemailer.createTransport({
+        service: "gmail",
+        port: 465,
+        secure: true,
+        auth: {
+            user: "1959018@itec.hcmus.edu.vn",
+            pass: process.env.EMAIL_KEY,
+        },
+    });
 
-  let info: SentMessageInfo = await transporter.sendMail({
-    from: "1959018@itec.hcmus.edu.vn",
-    to: receiver,
-    subject: subject,
-    text: body,
-  });
+    const mailOptions: { subject: any; from: string; to: any; text: any } = {
+        from: "MDT Mail",
+        to: opts.receiver, subject: opts.subject, text: opts.body
+    }
 
-  return info;
+    return await transporter.sendMail(mailOptions);
 };
 
-export { SentMail };
+export {SentMail};
