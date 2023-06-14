@@ -1,12 +1,6 @@
-import express, { Router } from "express";
-import { AsyncHandler } from "../utils/async-handler";
-import {
-  CreateMDT,
-  DeleteMDT,
-  GetAllMDT,
-  RandomMDT,
-  UpdateMDT,
-} from "../controller/mdt";
+import express, {Router} from "express";
+import {AsyncHandler} from "../utils/async-handler";
+import {CreateMDT, DeleteMDT, GetAllMDT, RandomMDT, UpdateMDT,} from "../controllers/mdt";
 
 const router: Router = express.Router();
 

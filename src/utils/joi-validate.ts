@@ -19,4 +19,4 @@ const mdtSchema: Joi.ObjectSchema = Joi.object({
 const validateEmail = validator(emailSchema);
 const validateMDT = validator(mdtSchema);
 
-export {validateEmail, validateMDT};
+export {validateEmail, validateMDT, validator};

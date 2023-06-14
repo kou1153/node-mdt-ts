@@ -1,15 +1,16 @@
 import "reflect-metadata";
 import * as dotenv from "dotenv";
-import path from "path";
-import {CreateExpress} from "./utils/app";
+import {CreateExpress} from "./app";
 import {ConnectDB, CreateDataSource} from "./database/connection";
-import {MDT} from "./database/model/MDT";
+import {MDT} from "./database/models/MDT";
 import e from "express";
 import {DataSource} from "typeorm";
-import {errorThrower} from "./utils/error-thrower";
 
 const main = async (): Promise<void> => {
-    dotenv.config({path: path.resolve(__dirname, '../.env')});
+    dotenv.config({path: `${__dirname}/../.env`});
+    if (dotenv.config({path: `${__dirname}/../.env`}).error !== undefined) {
+        throw Error("Failed to load .env file")
+    }
 
     const host = process.env.DB_HOST || "localhost";
     const port = process.env.DB_PORT || 5432;
@@ -19,14 +20,17 @@ const main = async (): Promise<void> => {
 
     let _db: DataSource = CreateDataSource(host, Number(port), uname, pass, dbName, [MDT])
 
-    await ConnectDB(_db).catch(e =>
-        errorThrower(e, "Failed to connect DB")
+    await ConnectDB(_db).catch((): void => {
+            throw Error("Failed to connect DB")
+        }
     );
 
-    let app: e.Express = await CreateExpress().catch(e =>
-        errorThrower(e, "Failed to create Express")
-    );
+    let app: e.Express = await CreateExpress().catch(() => {
+        throw Error("Failed to create Express");
+    });
     app.listen(process.env.PORT, () => console.log(`Server started`));
 };
 
-main().catch(e => errorThrower(e, "Something wrong with main()"));
+main().catch((): void => {
+    throw Error("Something wrong with main()")
+});

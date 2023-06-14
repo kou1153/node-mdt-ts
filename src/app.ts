@@ -1,9 +1,8 @@
 import express, {Express} from "express";
 import morgan from "morgan";
-import {EmailRouter} from "../router/email";
-import {MdtRouter} from "../router/mdt";
-import {ErrorHandler} from "./error-handler";
-import {errorThrower} from "./error-thrower";
+import {EmailRouter} from "./routes/email";
+import {MdtRouter} from "./routes/mdt";
+import {ErrorHandler} from "./utils/error-handler";
 
 const CreateExpress = async (): Promise<express.Express> => {
     const app: Express = express();
@@ -16,8 +15,9 @@ const CreateExpress = async (): Promise<express.Express> => {
 
     app.use("/api/v1/email", EmailRouter);
 
-    app.use("*", () =>
-        errorThrower(Error("CreateExpress() invalid route"), "Invalid Route")
+    app.use("*", () => {
+            throw new Error("Invalid Route")
+        }
     );
 
     app.use(ErrorHandler);
